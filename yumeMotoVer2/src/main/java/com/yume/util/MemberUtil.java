@@ -11,7 +11,8 @@ public class MemberUtil {
 	
 	public MemberUtil(MemberVO mvo) {
 		// TODO Auto-generated constructor stub
-		this.memberVO = mvo; 
+		this.memberVO = mvo;
+		System.out.println(memberVO.toString());
 	}
 	
 	
@@ -32,13 +33,13 @@ public class MemberUtil {
 			return resultHash;
 		}
 		for(MemberVO mvo : memberList){
-			if(mvo.getM_id()==memberVO.getM_id() ){
+			if(mvo.getM_id().equals(memberVO.getM_id()) ){
 				System.out.println("Finding ID");
-				if(mvo.getM_pwd()==memberVO.getM_pwd()){
+				if(mvo.getM_pwd().equals(memberVO.getM_pwd())){
 					System.out.println("PW OK Login OK");
 					resultMsg = "Succeed Login Welcome to Yumemoto";
 					resultHash.put("resultMsg", resultMsg);
-					resultHash.put("memberInfo", memberVO);
+					resultHash.put("memberInfo", mvo);
 					break;
 				}else{
 					System.out.println("PW Not Collect");

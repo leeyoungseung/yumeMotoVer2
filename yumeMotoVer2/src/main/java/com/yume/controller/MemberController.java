@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -28,17 +29,6 @@ public class MemberController {
 	
 	private static final Logger L = LoggerFactory.getLogger(MemberController.class);
 	
-	/**
-	 * For Debug, It output Log
-	 * @param msg
-	 * @throws Exception
-	 */
-	private void L(String msg) throws Exception{
-		L("");
-		L.info(msg);
-		L("");
-	}
-	
 	@Inject
 	private MemberService service;
 	
@@ -51,7 +41,7 @@ public class MemberController {
 	
 	@RequestMapping(value="/createMember", method = RequestMethod.POST)
 	public String createMember(MemberVO mvo, RedirectAttributes rttr) throws Exception{
-		L("createMember post");
+		L.info("createMember post");
 		memberService.joinMember(mvo);
 		return "redirect:/member/readMember?m_num="+mvo.getM_num();
 		
@@ -60,21 +50,21 @@ public class MemberController {
 	
 	@RequestMapping(value="/readMember", method = RequestMethod.GET)
 	public void readMember(Integer m_num, Model model) throws Exception{
-		L("readMember get");
+		L.info("readMember get");
 		model.addAttribute("memberInfo", memberService.readMember(m_num));
 	}
 	
 	
 	@RequestMapping(value="/updateMember" , method = RequestMethod.GET)
 	public void updateMember(Integer m_num, Model model) throws Exception{
-		L("updateMember get");
+		L.info("updateMember get");
 		model.addAttribute("user",service.readMember(m_num));
 	}
 	
 	
 	@RequestMapping(value="/updateMember" , method = RequestMethod.POST)
 	public String updateMember(MemberVO mvo, RedirectAttributes rttr) throws Exception{
-		L("updateMember post");
+		L.info("updateMember post");
 		service.joinMember(mvo);
 		return "redirect:/member/readMember?m_num="+mvo.getM_num();
 	}
@@ -82,7 +72,7 @@ public class MemberController {
 	
 	@RequestMapping(value="/deleteMember", method= RequestMethod.POST)
 	public String deleteMember(Integer m_num, RedirectAttributes rttr) throws Exception{
-		L("deleteMember post");
+		L.info("deleteMember post");
 		service.deleteMember(m_num);
 		return "redirect:/member/main";
 	}
@@ -90,35 +80,41 @@ public class MemberController {
 	
 	@RequestMapping(value="/joinMember", method = RequestMethod.GET)
 	public void mainPage() throws Exception{
-		L("mainPage");
+		L.info("mainPage");
 	}
 	
 	
 	
-	@RequestMapping(value="/loginMember" , method = RequestMethod.GET)
-	public void loginMember() throws Exception{
-		L("loginMember get");
+	@RequestMapping(value="/login" , method = RequestMethod.GET)
+	public void loginMember(@ModelAttribute("mvo") MemberVO mvo) throws Exception{
+		L.info("loginMember get");
 	}
 	
 	
-	@RequestMapping(value="/loginMember", method= RequestMethod.POST)
-	public String loginMember(MemberVO mvo, Model model, 
+	@RequestMapping(value="/loginPost", method= RequestMethod.POST)
+	public String loginMember(
+			MemberVO mvo,
+			Model model, 
 			RedirectAttributes rttr,
 			HttpServletRequest req) throws Exception{
-		L("loginMember post");
+		L.info("loginMember post");
+
 		HttpSession session = req.getSession();
 		String resultPage=null;
+		
+		mvo.toString();
 		
 		MemberUtil memberUtil = new MemberUtil(mvo);
 		HashMap hm = memberUtil.loginCheck(service.listMember());
 		
 		if(hm.get("memberInfo")==null){
 			model.addAttribute("resultMsg", hm.get("resultMsg"));
-			resultPage = "redirect:/member/loginMember";
+			resultPage = "redirect:/member/login";
 		}else{
 			session.setAttribute("memberInfo", hm.get("memberInfo"));
 			model.addAttribute("resultMsg", hm.get("resultMsg"));
-			resultPage = "redirect:/member/readMember?m_num="+mvo.getM_num();
+			//resultPage = "redirect:/member/readMember?m_num="+mvo.getM_num();
+			resultPage = "/member/loginPost";
 		}
 		
 		return resultPage;
