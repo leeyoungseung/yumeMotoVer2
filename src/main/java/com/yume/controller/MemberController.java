@@ -39,11 +39,17 @@ public class MemberController {
 	}
 	
 	
-	@RequestMapping(value="/createMember", method = RequestMethod.POST)
+	@RequestMapping(value="/createMemberDo", method = RequestMethod.POST)
 	public String createMember(MemberVO mvo, RedirectAttributes rttr) throws Exception{
 		L.info("createMember post");
-		memberService.joinMember(mvo);
-		return "redirect:/member/readMember?m_num="+mvo.getM_num();
+		mvo.toString();
+		int res = memberService.joinMember(mvo);
+		if(res<=1){
+			return "redirect:/member/readMember?m_num="+mvo.getM_num();
+		}else {
+			return "/member/createMember";
+		}
+			
 		
 	}
 	

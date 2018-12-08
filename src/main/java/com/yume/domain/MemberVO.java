@@ -16,6 +16,7 @@ public class MemberVO {
 	private String m_pwd;		//it is Member's password.
 	private String m_celphone;	//It is Member's celPhone.
 	private Date m_birth;		//It is Member's birthday.
+	private String m_setBirthStr;
 	
 	/**
 	 * this method is constructor. 
@@ -42,6 +43,16 @@ public class MemberVO {
 	}
 	
 	//----------------------getter and setter----------------------------
+	
+	
+	public String getM_setBirthStr() {
+		return m_setBirthStr;
+	}
+
+	public void setM_setBirthStr(String m_setBirthStr) {
+		this.m_setBirthStr = m_setBirthStr;
+		
+	}
 	
 	public Integer getM_num() {
 		return m_num;
